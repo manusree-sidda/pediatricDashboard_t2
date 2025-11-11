@@ -121,14 +121,15 @@ h1,h2,h3,h4,p,div,span{{color:var(--ink);}}
 .right{{text-align:right;}} .center{{text-align:center;}} .red{{color:#C6002A;font-weight:900;}}
 
 /* Timeline */
-.timelinewrap{{padding:6px;}}
-.vert{{position:relative;height:400px;margin:0 20px;}}
-.vert:before{{content:"";position:absolute;left:50%;top:12px;bottom:12px;width:2px;background:#111;transform:translateX(-50%);}}
-.vert:after{{content:"";position:absolute;left:30px;right:30px;top:4px;height:2px;background:#111;}}
-.hbot{{position:absolute;left:30px;right:30px;bottom:4px;height:2px;background:#111;}}
+.timelinewrap{{padding:12px;}}
+.vert{{position:relative;height:520px;margin:0 24px;}}
+.vert:before{{content:"";position:absolute;left:50%;top:18px;bottom:18px;width:2px;background:#111;transform:translateX(-50%);}}
+.vert:after{{content:"";position:absolute;left:40px;right:40px;top:6px;height:2px;background:#111;}}
+.hbot{{position:absolute;left:40px;right:40px;bottom:6px;height:2px;background:#111;}}
 .tick{{position:absolute;left:50%;transform:translateX(-50%);}}
-.tick .dot{{position:absolute;left:-4px;top:-4px;width:7px;height:7px;background:#111;border-radius:50%;}}
-.tick .lbl{{position:absolute;left:16px;top:-8px;width:200px;font-weight:700;font-size:12px;}}
+.tick .dot{{position:absolute;left:-4px;top:-4px;width:8px;height:8px;background:#111;border-radius:50%;}}
+.tick .lbl{{position:absolute;left:20px;top:-10px;width:230px;font-weight:700;}}
+
 
 /* Event-look boxes */
 .eventbox{{border:2px solid var(--border);border-radius:16px;padding:12px;background:#fff;box-shadow:0 2px 0 {theme['eventbox_shadow']} inset;}}
@@ -480,6 +481,11 @@ with col_mid:
     # 2. Fetal Drug Selectbox
     fd_label = get_patient_value(patient_data, 'Fetal_Drug_Exposure_label', default='No')
     # 3. Abnormalities Text Area
+
+    syn = st.toggle("Syndrome Present", value=syn_val)
+
+    # 2. Fetal Drug Selectbox
+    st.text_input("Fetal Drug Exposure", value=fd_label, disabled=True)
     all_abnormalities = [
         
         get_patient_value(patient_data, 'NCAA1', default="NULL"),
@@ -493,12 +499,12 @@ with col_mid:
     valid_abnormalities = [ab for ab in all_abnormalities if ab not in ignore_values]
     final_ab_string = ", ".join(valid_abnormalities)
     if not final_ab_string:
-        final_ab_string = "None reported"
+        final_ab_string = "None reported" 
+    ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=160, disabled=True)
 
     #ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=120, disabled=True)
     abb = final_ab_string
     st.markdown(
-        '<br>'
         f'<div class="card">'
         f'<div style="text-decoration:underline;font-weight:900;">Syndrome Present: {syn_label}</div>'
         f'Sex: {sex}<br>'
@@ -507,6 +513,7 @@ with col_mid:
         f'</div>',
         unsafe_allow_html=True
     )
+
 #-------------------------------------------------------------------------------------------
 
 # ================= RIGHT COLUMN =================
@@ -523,40 +530,15 @@ with col_right:
         <div class="timelinewrap">
             <div class="vert">
                 <div class="hbot"></div>
-                <div class="tick" style="top:30px;"><div class="dot"></div><div class="lbl"><b>Discharge</b><br>{discharge_date_val}</div></div>
-                <div class="tick" style="top:130px;"><div class="dot"></div><div class="lbl"><b>Sepsis Found and Treated</b><br>{sepsis_date_val}</div></div>
-                <div class="tick" style="top:230px;"><div class="dot"></div><div class="lbl"><b>Bleed Present</b><br>{bleed_date_val}</div></div>
-                <div class="tick" style="top:330px;"><div class="dot"></div><div class="lbl"><b>Surgery Completion</b><br>{surg_date_val}</div></div>
+                <div class="tick" style="top:40px;"><div class="dot"></div><div class="lbl"><b>Discharge</b><br>{discharge_date_val}</div></div>
+                <div class="tick" style="top:170px;"><div class="dot"></div><div class="lbl"><b>Sepsis Found and Treated</b><br>{sepsis_date_val}</div></div>
+                <div class="tick" style="top:300px;"><div class="dot"></div><div class="lbl"><b>Bleed Present</b><br>{bleed_date_val}</div></div>
+                <div class="tick" style="top:420px;"><div class="dot"></div><div class="lbl"><b>Surgery Completion</b><br>{surg_date_val}</div></div>
             </div>
         </div>
     </div>
     """
     st.markdown(timeline_html, unsafe_allow_html=True)
 
-    # 1. Syndrome Present
 
-
-    syn = st.toggle("Syndrome Present", value=syn_val)
-
-    # 2. Fetal Drug Selectbox
-    st.text_input("Fetal Drug Exposure", value=fd_label, disabled=True)
-
-    # 3. Abnormalities Text Area
-
-    all_abnormalities = [
-        
-        get_patient_value(patient_data, 'NCAA1', default="NULL"),
-        get_patient_value(patient_data, 'NCAA2', default="NULL"),
-        get_patient_value(patient_data, 'NCAA3', default="NULL"),
-        get_patient_value(patient_data, 'NCAA4', default="NULL"),
-        get_patient_value(patient_data, 'NCAA5', default="NULL"),
-        get_patient_value(patient_data, 'ChromAbTerm', default="—")
-    ]
-
-    ignore_values = {"NULL", "—", None, "", "0", "No chromosomal abnormality identified"} 
-    valid_abnormalities = [ab for ab in all_abnormalities if ab not in ignore_values]
-    final_ab_string = ", ".join(valid_abnormalities)
-    if not final_ab_string:
-        final_ab_string = "None reported"
-    ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=160, disabled=True)
     
