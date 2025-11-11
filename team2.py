@@ -558,5 +558,5 @@ with col_right:
     final_ab_string = ", ".join(valid_abnormalities)
     if not final_ab_string:
         final_ab_string = "None reported"
-    ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=120, disabled=True)
+    ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=160, disabled=True)
     
