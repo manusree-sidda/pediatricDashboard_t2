@@ -39,8 +39,6 @@ else:
 
 st.set_page_config(page_title="Pediatric Dashboard", layout="wide")
 
-
-
 # ----------------- THEME FUNCTION -----------------
 def get_theme_css(sex):
     """Generate theme CSS based on gender selection"""
@@ -123,14 +121,14 @@ h1,h2,h3,h4,p,div,span{{color:var(--ink);}}
 .right{{text-align:right;}} .center{{text-align:center;}} .red{{color:#C6002A;font-weight:900;}}
 
 /* Timeline */
-.timelinewrap{{padding:12px;}}
-.vert{{position:relative;height:520px;margin:0 24px;}}
-.vert:before{{content:"";position:absolute;left:50%;top:18px;bottom:18px;width:2px;background:#111;transform:translateX(-50%);}}
-.vert:after{{content:"";position:absolute;left:40px;right:40px;top:6px;height:2px;background:#111;}}
-.hbot{{position:absolute;left:40px;right:40px;bottom:6px;height:2px;background:#111;}}
+.timelinewrap{{padding:6px;}}
+.vert{{position:relative;height:400px;margin:0 20px;}}
+.vert:before{{content:"";position:absolute;left:50%;top:12px;bottom:12px;width:2px;background:#111;transform:translateX(-50%);}}
+.vert:after{{content:"";position:absolute;left:30px;right:30px;top:4px;height:2px;background:#111;}}
+.hbot{{position:absolute;left:30px;right:30px;bottom:4px;height:2px;background:#111;}}
 .tick{{position:absolute;left:50%;transform:translateX(-50%);}}
-.tick .dot{{position:absolute;left:-4px;top:-4px;width:8px;height:8px;background:#111;border-radius:50%;}}
-.tick .lbl{{position:absolute;left:20px;top:-10px;width:230px;font-weight:700;}}
+.tick .dot{{position:absolute;left:-4px;top:-4px;width:7px;height:7px;background:#111;border-radius:50%;}}
+.tick .lbl{{position:absolute;left:16px;top:-8px;width:200px;font-weight:700;font-size:12px;}}
 
 /* Event-look boxes */
 .eventbox{{border:2px solid var(--border);border-radius:16px;padding:12px;background:#fff;box-shadow:0 2px 0 {theme['eventbox_shadow']} inset;}}
@@ -301,21 +299,68 @@ selected_patient_id = st.selectbox("Select Patient ID", patient_list)
 # __________________Get all data for the selected patient__________________
 patient_data = df[df['PatID'] == selected_patient_id].iloc[0]
 
+
 # ----------------- HELPERS -----------------
-def gauge_svg(score_0_to_10: float) -> str:
-    angle_deg = 180 - max(0, min(10, score_0_to_10)) * 18.0
-    cx, cy, r = 130, 120, 65
-    x2 = cx + r * math.cos(math.radians(angle_deg))
-    y2 = cy - r * math.sin(math.radians(angle_deg))
-    return f"""
-    <svg width="260" height="140" viewBox="0 0 260 140">
-      <path d="M20 120 A110 110 0 0 1 240 120" fill="none" stroke="#FFE0E0" stroke-width="26" />
-      <path d="M20 120 A110 110 0 0 1 160 35" fill="none" stroke="#E15259" stroke-width="26" stroke-linecap="round"/>
-      <path d="M160 35 A110 110 0 0 1 240 120" fill="none" stroke="#9DB7FF" stroke-width="26" stroke-linecap="round"/>
-      <line x1="{cx}" y1="{cy}" x2="{x2}" y2="{y2}" stroke="#1B1E28" stroke-width="6" stroke-linecap="round"/>
-      <circle cx="{cx}" cy="{cy}" r="10" fill="#1B1E28"/>
-    </svg>
-    """
+def gauge_svg(score_0_to_10: float, large: bool = False) -> str:
+    """Generate gauge SVG - larger version for top display"""
+    if large:
+        angle_deg = 180 - max(0, min(10, score_0_to_10)) * 18.0
+        cx, cy, r = 200, 180, 100
+        x2 = cx + r * math.cos(math.radians(angle_deg))
+        y2 = cy - r * math.sin(math.radians(angle_deg))
+        return f"""
+        <svg width="400" height="220" viewBox="0 0 400 220">
+          <path d="M30 180 A170 170 0 0 1 370 180" fill="none" stroke="#FFE0E0" stroke-width="40" />
+          <path d="M30 180 A170 170 0 0 1 250 50" fill="none" stroke="#E15259" stroke-width="40" stroke-linecap="round"/>
+          <path d="M250 50 A170 170 0 0 1 370 180" fill="none" stroke="#9DB7FF" stroke-width="40" stroke-linecap="round"/>
+          <line x1="{cx}" y1="{cy}" x2="{x2}" y2="{y2}" stroke="#1B1E28" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="{cx}" cy="{cy}" r="14" fill="#1B1E28"/>
+        </svg>
+        """
+    else:
+        angle_deg = 180 - max(0, min(10, score_0_to_10)) * 18.0
+        cx, cy, r = 130, 120, 65
+        x2 = cx + r * math.cos(math.radians(angle_deg))
+        y2 = cy - r * math.sin(math.radians(angle_deg))
+        return f"""
+        <svg width="260" height="140" viewBox="0 0 260 140">
+          <path d="M20 120 A110 110 0 0 1 240 120" fill="none" stroke="#FFE0E0" stroke-width="26" />
+          <path d="M20 120 A110 110 0 0 1 160 35" fill="none" stroke="#E15259" stroke-width="26" stroke-linecap="round"/>
+          <path d="M160 35 A110 110 0 0 1 240 120" fill="none" stroke="#9DB7FF" stroke-width="26" stroke-linecap="round"/>
+          <line x1="{cx}" y1="{cy}" x2="{x2}" y2="{y2}" stroke="#1B1E28" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="{cx}" cy="{cy}" r="10" fill="#1B1E28"/>
+        </svg>
+        """
+
+# ================= RISK SECTION - TOP PRIORITY =================
+st.markdown('<div style="margin-bottom:12px;"><h2 style="font-size:28px;font-weight:900;color:#C6002A;margin:4px 0 8px 0;text-align:center;text-shadow:1px 1px 2px rgba(0,0,0,0.1);">⚠️ PATIENT RISK ASSESSMENT ⚠️</h2></div>', unsafe_allow_html=True)
+
+# Calculate risk score first (needed for display)
+weights = {"Premature":2.5,"Low birth weight":2.0,"Co-morbidity":1.5,"Genetic syndrome":1.5,"Recent infection":1.0,"Post-op bleed":3.0}
+risk_selection = st.multiselect(
+    "**🔴 SELECT RISK FACTORS**",
+    ["Premature","Low birth weight","Co-morbidity","Genetic syndrome","Recent infection","Post-op bleed"],
+    default=[],
+    key="risk_factors_top"
+)
+risk_score = max(0.0, min(10.0, sum(weights.get(x,0) for x in risk_selection)))
+risk_percentage = int((risk_score / 10.0) * 100)
+
+# Large risk display at top - MAIN ATTRACTION
+st.markdown('<div style="background:linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);border:3px solid #C6002A;border-radius:16px;padding:16px 8px;margin:8px 0 20px 0;box-shadow:0 4px 12px rgba(198,0,42,0.15);">', unsafe_allow_html=True)
+risk_col1, risk_col2, risk_col3 = st.columns([1.5, 1.4, 1])
+with risk_col1:
+    st.markdown(f'<div style="text-align:center;padding:12px 0;"><div style="font-size:72px;font-weight:900;color:#C6002A;line-height:1;text-shadow:2px 2px 4px rgba(0,0,0,0.1);">{risk_percentage}%</div><div style="font-size:24px;font-weight:800;margin-top:8px;color:#8B0000;letter-spacing:2px;">RISK LEVEL</div></div>', unsafe_allow_html=True)
+with risk_col2:
+    st.markdown('<div style="text-align:center;padding:8px 0;">', unsafe_allow_html=True)
+    st.markdown(gauge_svg(risk_score, large=True), unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+with risk_col3:
+    st.markdown(f'<div style="text-align:center;padding:12px 0;"><div style="font-size:48px;font-weight:900;color:#1B1E28;line-height:1.1;">{risk_score:.1f}</div><div style="font-size:20px;font-weight:700;margin-top:6px;color:#555;">/ 10.0</div><div style="font-size:15px;font-weight:700;margin-top:10px;color:#666;text-transform:uppercase;letter-spacing:1px;">Risk Score</div></div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('<div style="height:2px;background:linear-gradient(to right, transparent, #ddd, transparent);margin:8px 0 12px 0;"></div>', unsafe_allow_html=True)
+
 # ----------------- COLUMNS -----------------
 col_left, col_mid, col_right = st.columns([1.1, 1.2, 1.2])
 
@@ -352,7 +397,7 @@ with col_left:
     with st.container():
         st.markdown('<div class="card">', unsafe_allow_html=True)
 
-#__________________Getting all the left colmun categories__________________
+#---------------Getting all the left colmun categories from the dataset-------------
         st.text_input("Race", value=get_patient_value(patient_data, 'Race_label'), disabled=True)
         st.text_input("Ethnicity", value=get_patient_value(patient_data, 'Ethnicity_label'), disabled=True)
         st.text_input("Date of Birth", value=get_patient_value(patient_data, 'DOB'), disabled=True)
@@ -389,9 +434,9 @@ with col_left:
 # ================= MIDDLE COLUMN =================
 with col_mid:
     
-    cardiac_arrest_date = get_patient_value(patient_data, 'CardArrestDtTm', default="--")
-    sepsis_date = get_patient_value(patient_data, 'CompSepsisDt', default="--")
-    cardiac_details = get_patient_value(patient_data, "Cardiac Anatomy Notes", default = "--")
+    cardiac_arrest_date = get_patient_value(patient_data, 'CardArrestDtTm', default="N/A")
+    sepsis_date = get_patient_value(patient_data, 'CompSepsisDt', default="N/A")
+    cardiac_details = get_patient_value(patient_data, "Cardiac Anatomy Notes", default = "N/A")
     
     st.markdown('<div class="eventtitle">Cardiac Event</div>', unsafe_allow_html=True)
     st.markdown((
@@ -408,24 +453,8 @@ with col_mid:
        f'<div class="right" style="font-size:20px;font-weight:900;">🚩 &nbsp; {sepsis_date}</div>'
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
-        '<div class="center" style="font-style:italic;font-weight:700;">*Details*</div>'
+        '<div class="center" style="font-style:italic;font-weight:700;">N/A</div>'
         '</div>', unsafe_allow_html=True)
-
-    # Risk Factors box (dropdown directly above gauge)
-    st.markdown('<div class="eventtitle">Risk Factors</div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        risk_selection = st.multiselect(
-            "Select risk factors",
-            ["Premature","Low birth weight","Co-morbidity","Genetic syndrome","Recent infection","Post-op bleed"],
-            default=[]
-        )
-        weights = {"Premature":2.5,"Low birth weight":2.0,"Co-morbidity":1.5,"Genetic syndrome":1.5,"Recent infection":1.0,"Post-op bleed":3.0}
-        score = max(0.0, min(10.0, sum(weights.get(x,0) for x in risk_selection)))
-        st.write(f"**Score:** {score:.1f} / 10")
-        st.markdown('<div class="center" style="font-weight:900;margin:6px 0;">Risk Score</div>', unsafe_allow_html=True)
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown(gauge_svg(score), unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ================= RIGHT COLUMN =================
 with col_right:
@@ -434,7 +463,6 @@ with col_right:
     bleed_date_val = get_patient_value(patient_data, 'CompReopBleedDtTm', default="--")
     sepsis_date_val = get_patient_value(patient_data, 'CompSepsisDt', default="--")
     discharge_date_val = get_patient_value(patient_data, 'End of Interstage/BTTS Period/Admission', default="--")
-
     
     timeline_html = f"""
     <div class="card">
@@ -442,39 +470,51 @@ with col_right:
         <div class="timelinewrap">
             <div class="vert">
                 <div class="hbot"></div>
-                <div class="tick" style="top:40px;"><div class="dot"></div><div class="lbl"><b>Discharge</b><br>{discharge_date_val}</div></div>
-                <div class="tick" style="top:170px;"><div class="dot"></div><div class="lbl"><b>Sepsis Found and Treated</b><br>{sepsis_date_val}</div></div>
-                <div class="tick" style="top:300px;"><div class="dot"></div><div class="lbl"><b>Bleed Present</b><br>{bleed_date_val}</div></div>
-                <div class="tick" style="top:420px;"><div class="dot"></div><div class="lbl"><b>Surgery Completion</b><br>{surg_date_val}</div></div>
+                <div class="tick" style="top:30px;"><div class="dot"></div><div class="lbl"><b>Discharge</b><br>{discharge_date_val}</div></div>
+                <div class="tick" style="top:130px;"><div class="dot"></div><div class="lbl"><b>Sepsis Found and Treated</b><br>{sepsis_date_val}</div></div>
+                <div class="tick" style="top:230px;"><div class="dot"></div><div class="lbl"><b>Bleed Present</b><br>{bleed_date_val}</div></div>
+                <div class="tick" style="top:330px;"><div class="dot"></div><div class="lbl"><b>Surgery Completion</b><br>{surg_date_val}</div></div>
             </div>
         </div>
     </div>
     """
     st.markdown(timeline_html, unsafe_allow_html=True)
 
-    # --- FIX: Logic is now based on 'SyndromeTerm' column ---
-    
-    # 1. Syndrome Toggle
-    # 1. Syndrome Present (Text Box)
+    # 1. Syndrome Present
     syn_val = get_patient_value(patient_data, 'Syndrome_Present_bool', default=False)
     syn_label = "Yes" if syn_val else "No"
-    st.text_input("Syndrome Present", value=syn_label, disabled=True)
+
+    syn = st.toggle("Syndrome Present", value=syn_val)
 
     # 2. Fetal Drug Selectbox
     fd_label = get_patient_value(patient_data, 'Fetal_Drug_Exposure_label', default='No')
     st.text_input("Fetal Drug Exposure", value=fd_label, disabled=True)
 
-
     # 3. Abnormalities Text Area
-    ab_text = get_patient_value(patient_data, 'ChromAbTerm', default="—")
-    ab = st.text_area("Abnormalities / Etc.", value=ab_text, height=80, disabled=True)
-  
+
+    all_abnormalities = [
+        
+        get_patient_value(patient_data, 'NCAA1', default="NULL"),
+        get_patient_value(patient_data, 'NCAA2', default="NULL"),
+        get_patient_value(patient_data, 'NCAA3', default="NULL"),
+        get_patient_value(patient_data, 'NCAA4', default="NULL"),
+        get_patient_value(patient_data, 'NCAA5', default="NULL"),
+        get_patient_value(patient_data, 'ChromAbTerm', default="—")
+    ]
+
+    ignore_values = {"NULL", "—", None, "", "0", "No chromosomal abnormality identified"} 
+    valid_abnormalities = [ab for ab in all_abnormalities if ab not in ignore_values]
+    final_ab_string = ", ".join(valid_abnormalities)
+    if not final_ab_string:
+        final_ab_string = "None reported"
+    ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=120, disabled=True)
+    
     st.markdown(
         f'<div class="card">'
-        f'<div style="text-decoration:underline;font-weight:900;">Syndrome Present: {syn_val}</div>'
+        f'<div style="text-decoration:underline;font-weight:900;">Syndrome Present: {syn_label}</div>'
         f'Sex: {sex}<br>'
         f'Fetal Drug Exposure: {fd_label}<br>'
-        f'Abnormalities: {ab_text}'
+        f'Abnormalities: {ab}'
         f'</div>',
         unsafe_allow_html=True
     )
