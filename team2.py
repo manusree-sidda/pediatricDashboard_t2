@@ -519,10 +519,10 @@ with col_mid:
 # ================= RIGHT COLUMN =================
 with col_right:
 
-    surg_date_val = get_patient_value(patient_data, 'CardSurgDt', default="--")
-    bleed_date_val = get_patient_value(patient_data, 'CompReopBleedDtTm', default="--")
-    sepsis_date_val = get_patient_value(patient_data, 'CompSepsisDt', default="--")
-    discharge_date_val = get_patient_value(patient_data, 'End of Interstage/BTTS Period/Admission', default="--")
+    surg_date_val = get_patient_value(patient_data, 'CardSurgDt', default="N/A")
+    bleed_date_val = get_patient_value(patient_data, 'CompReopBleedDtTm', default="N/A")
+    sepsis_date_val = get_patient_value(patient_data, 'CompSepsisDt', default="N/A")
+    discharge_date_val = get_patient_value(patient_data, 'End of Interstage/BTTS Period/Admission', default="N/A")
     
     timeline_html = f"""
     <div class="card">
