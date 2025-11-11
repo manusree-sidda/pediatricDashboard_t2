@@ -443,9 +443,7 @@ with col_mid:
     wound_label = "Yes" if get_patient_value(patient_data, 'CompWoundInf', 0) == 1 else "No"
 
     st.markdown('<div class="eventtitle">Cardiac Event</div>', unsafe_allow_html=True)
-
     st.markdown((
-
         '<div class="eventbox">'
         f'<div class="center" style="font-size:20px;font-weight:900;">💔 &nbsp; Date & Time - {cardiac_arrest_date} </div>'
         '<div style="height:10px;"></div>'
@@ -456,7 +454,6 @@ with col_mid:
         f'<div class="center" style="font-weight:900; font-size:16px;">Cardiac Anatomy Notes - </div>'
         f'<div class="center" style="font-style:italic;font-weight:700;">{cardiac_details}</div>'
         '</div>'), unsafe_allow_html=True)
-
 
     st.markdown('<div class="eventtitle">Septic Event</div>', unsafe_allow_html=True)
     st.markdown(
@@ -469,11 +466,48 @@ with col_mid:
         f'CompCLABSI: <span style="float:right;">{clabsi_label}</span><br>'
         f'CompUTI: <span style="float:right;">{uti_label}</span><br>'
         f'CompWoundInf: <span style="float:right;">{wound_label}</span>'
+        
         '</div>'
         '</div>', unsafe_allow_html=True)
 
+    
+    
+    #---------------------------------------------------------------------------------
 
+    # 1. Syndrome Present
+    syn_val = get_patient_value(patient_data, 'Syndrome_Present_bool', default=False)
+    syn_label = "Yes" if syn_val else "No"
+    # 2. Fetal Drug Selectbox
+    fd_label = get_patient_value(patient_data, 'Fetal_Drug_Exposure_label', default='No')
+    # 3. Abnormalities Text Area
+    all_abnormalities = [
+        
+        get_patient_value(patient_data, 'NCAA1', default="NULL"),
+        get_patient_value(patient_data, 'NCAA2', default="NULL"),
+        get_patient_value(patient_data, 'NCAA3', default="NULL"),
+        get_patient_value(patient_data, 'NCAA4', default="NULL"),
+        get_patient_value(patient_data, 'NCAA5', default="NULL"),
+        get_patient_value(patient_data, 'ChromAbTerm', default="—")
+    ]
+    ignore_values = {"NULL", "—", None, "", "0", "No chromosomal abnormality identified"} 
+    valid_abnormalities = [ab for ab in all_abnormalities if ab not in ignore_values]
+    final_ab_string = ", ".join(valid_abnormalities)
+    if not final_ab_string:
+        final_ab_string = "None reported"
 
+    #ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=120, disabled=True)
+    abb = final_ab_string
+    st.markdown(
+        '<br>'
+        f'<div class="card">'
+        f'<div style="text-decoration:underline;font-weight:900;">Syndrome Present: {syn_label}</div>'
+        f'Sex: {sex}<br>'
+        f'Fetal Drug Exposure: {fd_label}<br>'
+        f'Abnormalities: {abb}'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+#-------------------------------------------------------------------------------------------
 
 # ================= RIGHT COLUMN =================
 with col_right:
@@ -500,13 +534,11 @@ with col_right:
     st.markdown(timeline_html, unsafe_allow_html=True)
 
     # 1. Syndrome Present
-    syn_val = get_patient_value(patient_data, 'Syndrome_Present_bool', default=False)
-    syn_label = "Yes" if syn_val else "No"
+
 
     syn = st.toggle("Syndrome Present", value=syn_val)
 
     # 2. Fetal Drug Selectbox
-    fd_label = get_patient_value(patient_data, 'Fetal_Drug_Exposure_label', default='No')
     st.text_input("Fetal Drug Exposure", value=fd_label, disabled=True)
 
     # 3. Abnormalities Text Area
@@ -528,12 +560,3 @@ with col_right:
         final_ab_string = "None reported"
     ab = st.text_area("Abnormalities / Etc.", value=final_ab_string, height=120, disabled=True)
     
-    st.markdown(
-        f'<div class="card">'
-        f'<div style="text-decoration:underline;font-weight:900;">Syndrome Present: {syn_label}</div>'
-        f'Sex: {sex}<br>'
-        f'Fetal Drug Exposure: {fd_label}<br>'
-        f'Abnormalities: {ab}'
-        f'</div>',
-        unsafe_allow_html=True
-    )
