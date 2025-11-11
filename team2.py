@@ -438,22 +438,20 @@ with col_mid:
     sepsis_date = get_patient_value(patient_data, 'CompSepsisDt', default="N/A")
     cardiac_details = get_patient_value(patient_data, "Cardiac Anatomy Notes", default = "N/A")
     suddenHypoxemia_Notes = get_patient_value(patient_data, "SH Notes", default = "N/A")
-    clabsi_label = "Yes" if get_patient_value(patient_data, 'CompCLABSI', 0) == 1 else "N/A"
-    uti_label = "Yes" if get_patient_value(patient_data, 'CompUTI', 0) == 1 else "N/A"
-    wound_label = "Yes" if get_patient_value(patient_data, 'CompWoundInf', 0) == 1 else "N/A"
-
+    clabsi_label = "Yes" if get_patient_value(patient_data, 'CompCLABSI', 0) == 1 else "No"
+    uti_label = "Yes" if get_patient_value(patient_data, 'CompUTI', 0) == 1 else "No"
+    wound_label = "Yes" if get_patient_value(patient_data, 'CompWoundInf', 0) == 1 else "No"
 
     st.markdown('<div class="eventtitle">Cardiac Event</div>', unsafe_allow_html=True)
+
     st.markdown((
-        
+
         '<div class="eventbox">'
-        f'<div class="right" style="font-size:20px;font-weight:900;">💔 &nbsp; Date & Time - {cardiac_arrest_date} </div>'
+        f'<div class="center" style="font-size:20px;font-weight:900;">💔 &nbsp; Date & Time - {cardiac_arrest_date} </div>'
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
-        
         f'<div class="center" style="font-weight:900; font-size:16px;">sudden Hypoxemia Notes - </div>'
         f'<div class="center" style="font-style:italic;font-weight:700;">{suddenHypoxemia_Notes}</div>'
-
         '<br>'
         f'<div class="center" style="font-weight:900; font-size:16px;">Cardiac Anatomy Notes - </div>'
         f'<div class="center" style="font-style:italic;font-weight:700;">{cardiac_details}</div>'
@@ -463,7 +461,7 @@ with col_mid:
     st.markdown('<div class="eventtitle">Septic Event</div>', unsafe_allow_html=True)
     st.markdown(
         f'<div class="eventbox">'
-        f'<div class="right" style="font-size:20px;font-weight:900;">🚩 &nbsp; Date & Time - {sepsis_date}</div>'
+        f'<div class="center" style="font-size:20px;font-weight:900;">🚩 &nbsp; Date & Time - {sepsis_date}</div>'
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
 
