@@ -401,7 +401,7 @@ with col_left:
         st.text_input("Race", value=get_patient_value(patient_data, 'Race_label'), disabled=True)
         st.text_input("Ethnicity", value=get_patient_value(patient_data, 'Ethnicity_label'), disabled=True)
         st.text_input("Date of Birth", value=get_patient_value(patient_data, 'DOB'), disabled=True)
-        st.text_input("Age at Surgery (days)", value=get_patient_value(patient_data, 'AgeAtSurgeryMonths'), disabled=True)
+        st.text_input("Age at Surgery (days)", value=get_patient_value(patient_data, 'AgeAtSurgeryDays'), disabled=True)
 
         shunt_size_val = get_patient_value(patient_data, 'Shunt Size', default="N/A")
 
@@ -437,7 +437,7 @@ with col_mid:
     cardiac_arrest_date = get_patient_value(patient_data, 'CardArrestDtTm', default="N/A")
     sepsis_date = get_patient_value(patient_data, 'CompSepsisDt', default="N/A")
     cardiac_details = get_patient_value(patient_data, "Cardiac Anatomy Notes", default = "N/A")
-    shunt_Notes = get_patient_value(patient_data, "SH Notes", default = "N/A")
+    suddenHypoxemia_Notes = get_patient_value(patient_data, "SH Notes", default = "N/A")
     clabsi_label = "Yes" if get_patient_value(patient_data, 'CompCLABSI', 0) == 1 else "N/A"
     uti_label = "Yes" if get_patient_value(patient_data, 'CompUTI', 0) == 1 else "N/A"
     wound_label = "Yes" if get_patient_value(patient_data, 'CompWoundInf', 0) == 1 else "N/A"
@@ -451,8 +451,8 @@ with col_mid:
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
         
-        f'<div class="center" style="font-weight:900; font-size:16px;">Shunt Notes - </div>'
-        f'<div class="center" style="font-style:italic;font-weight:700;">{shunt_Notes}</div>'
+        f'<div class="center" style="font-weight:900; font-size:16px;">sudden Hypoxemia Notes - </div>'
+        f'<div class="center" style="font-style:italic;font-weight:700;">{suddenHypoxemia_Notes}</div>'
 
         '<br>'
         f'<div class="center" style="font-weight:900; font-size:16px;">Cardiac Anatomy Notes - </div>'
