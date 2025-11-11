@@ -437,24 +437,45 @@ with col_mid:
     cardiac_arrest_date = get_patient_value(patient_data, 'CardArrestDtTm', default="N/A")
     sepsis_date = get_patient_value(patient_data, 'CompSepsisDt', default="N/A")
     cardiac_details = get_patient_value(patient_data, "Cardiac Anatomy Notes", default = "N/A")
-    
+    shunt_Notes = get_patient_value(patient_data, "SH Notes", default = "N/A")
+    clabsi_label = "Yes" if get_patient_value(patient_data, 'CompCLABSI', 0) == 1 else "N/A"
+    uti_label = "Yes" if get_patient_value(patient_data, 'CompUTI', 0) == 1 else "N/A"
+    wound_label = "Yes" if get_patient_value(patient_data, 'CompWoundInf', 0) == 1 else "N/A"
+
+
     st.markdown('<div class="eventtitle">Cardiac Event</div>', unsafe_allow_html=True)
     st.markdown((
+        
         '<div class="eventbox">'
-        f'<div class="right" style="font-size:20px;font-weight:900;">💔 &nbsp; {cardiac_arrest_date} </div>'
+        f'<div class="right" style="font-size:20px;font-weight:900;">💔 &nbsp; Date & Time - {cardiac_arrest_date} </div>'
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
+        
+        f'<div class="center" style="font-weight:900; font-size:16px;">Shunt Notes - </div>'
+        f'<div class="center" style="font-style:italic;font-weight:700;">{shunt_Notes}</div>'
+
+        '<br>'
+        f'<div class="center" style="font-weight:900; font-size:16px;">Cardiac Anatomy Notes - </div>'
         f'<div class="center" style="font-style:italic;font-weight:700;">{cardiac_details}</div>'
         '</div>'), unsafe_allow_html=True)
 
+
     st.markdown('<div class="eventtitle">Septic Event</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eventbox">'
-       f'<div class="right" style="font-size:20px;font-weight:900;">🚩 &nbsp; {sepsis_date}</div>'
+        f'<div class="eventbox">'
+        f'<div class="right" style="font-size:20px;font-weight:900;">🚩 &nbsp; Date & Time - {sepsis_date}</div>'
         '<div style="height:10px;"></div>'
         '<div style="height:1px;background:#111;margin:0 4px 8px;"></div>'
-        '<div class="center" style="font-style:italic;font-weight:700;">N/A</div>'
+
+                f'<div style="font-weight:700; text-align:left; padding: 0 12px 4px 12px; line-height: 1.6;">'
+        f'CompCLABSI: <span style="float:right;">{clabsi_label}</span><br>'
+        f'CompUTI: <span style="float:right;">{uti_label}</span><br>'
+        f'CompWoundInf: <span style="float:right;">{wound_label}</span>'
+        '</div>'
         '</div>', unsafe_allow_html=True)
+
+
+
 
 # ================= RIGHT COLUMN =================
 with col_right:
