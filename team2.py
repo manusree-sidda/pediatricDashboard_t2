@@ -91,9 +91,9 @@ def get_theme_css(sex):
     
     return f"""
 <style>
-/* Remove Streamlit chrome + tighten spacing */
-header[data-testid="stHeader"]{{display:none !important;}}
-#MainMenu, footer{{visibility:hidden !important;}}
+
+/* Keep Streamlit header visible */
+#MainMenu {{visibility: visible !important;}}
 .block-container{{padding-top:6px !important; max-width:1320px;}}
 
 /* Theme - {'Boy' if sex == 'Boy' else 'Girl'} */
