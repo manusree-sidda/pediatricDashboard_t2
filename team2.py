@@ -96,6 +96,10 @@ def get_theme_css(sex):
 #MainMenu {{visibility: visible !important;}}
 .block-container{{padding-top:6px !important; max-width:1320px;}}
 
+.block-container {{
+        padding-top: 3rem !important;
+    }}
+
 /* Theme - {'Boy' if sex == 'Boy' else 'Girl'} */
 :root{{
   --bg:{theme['bg']}; --panel:{theme['panel']}; --border:{theme['border']}; --ink:{theme['ink']};
