@@ -1,1 +1,1 @@
-Team 2 Dashboard
+![Dashboard](Dashboard_2.png)
