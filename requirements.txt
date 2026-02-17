@@ -1,8 +1,9 @@
-openml
-pandas
+streamlit>=1.35.0
+altair>=5.0.0
+pandas>=2.0.0
 scikit-learn
 matplotlib
-streamlit
-streamlit-extras
 plotly
+streamlit-extras
 streamviz
+openml
